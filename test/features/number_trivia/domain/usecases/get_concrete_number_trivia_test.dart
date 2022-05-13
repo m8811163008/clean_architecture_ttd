@@ -3,11 +3,12 @@ import 'package:clean_architecture_ttd/features/number_trivia/domain/repositorie
 import 'package:clean_architecture_ttd/features/number_trivia/domain/usecases/get_concrete_number_trivia.dart';
 import 'package:dartz/dartz.dart';
 import 'package:flutter_test/flutter_test.dart';
-import 'package:mocktail/mocktail.dart';
+import 'package:mockito/annotations.dart';
+import 'package:mockito/mockito.dart';
 
-class MockNumberTriviaRepository extends Mock
-    implements NumberTriviaRepository {}
+import 'get_concrete_number_trivia_test.mocks.dart';
 
+@GenerateMocks([NumberTriviaRepository])
 void main() {
   late final GetConcreteNumberTrivia useCase;
   late final MockNumberTriviaRepository mockNumberTriviaRepository;
@@ -18,15 +19,15 @@ void main() {
   NumberTrivia tNumberTrivia = const NumberTrivia(text: 'test', number: 1);
   int tNumber = 1;
   test('should get trivia for the number from the repository', () async {
-    //arrange a test
-    when(() => mockNumberTriviaRepository.getConcreteNumberTrivia(any()))
+    //arrange a test //Future<Either<Failure, NumberTrivia>>
+    when(mockNumberTriviaRepository.getConcreteNumberTrivia(any))
         .thenAnswer((_) async => Right(tNumberTrivia));
     //act on real class
     final result = await useCase(params: Params(number: tNumber));
     //assert
     expect(result, Right(tNumberTrivia));
     //verify to pass the correct argument to dependency
-    verify(() => mockNumberTriviaRepository.getConcreteNumberTrivia(tNumber));
+    verify(mockNumberTriviaRepository.getConcreteNumberTrivia(tNumber));
     verifyNoMoreInteractions(mockNumberTriviaRepository);
   });
 }

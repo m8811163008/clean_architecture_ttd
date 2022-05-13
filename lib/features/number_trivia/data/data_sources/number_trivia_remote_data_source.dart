@@ -4,7 +4,7 @@ abstract class NumberTriviaRemoteDataSource {
   /// Calls the http://numberapi.com/{number} endpoint.
   ///
   /// Throws a [ServerException] for all error code
-  Future<NumberTriviaModel> getConcreteNumberTrivia();
+  Future<NumberTriviaModel> getConcreteNumberTrivia(int number);
 
   /// Calls the http://numberapi.com/random endpoint.
   ///
