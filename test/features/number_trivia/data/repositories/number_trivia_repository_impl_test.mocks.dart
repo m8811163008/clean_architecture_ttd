@@ -4,7 +4,7 @@
 
 import 'dart:async' as _i4;
 
-import 'package:clean_architecture_ttd/core/platform/network_info.dart' as _i6;
+import 'package:clean_architecture_ttd/core/network/network_info.dart' as _i6;
 import 'package:clean_architecture_ttd/features/number_trivia/data/data_sources/number_trivia_local_data_source.dart'
     as _i5;
 import 'package:clean_architecture_ttd/features/number_trivia/data/data_sources/number_trivia_remote_data_source.dart'
