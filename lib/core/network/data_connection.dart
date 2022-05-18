@@ -201,7 +201,7 @@ class DataConnectionChecker {
   Timer? _timerHandle;
 
   // controller for the exposed 'onStatusChange' Stream
-  StreamController<DataConnectionStatus> _statusController =
+  final StreamController<DataConnectionStatus> _statusController =
       StreamController.broadcast();
 
   /// Subscribe to this stream to receive events whenever the
