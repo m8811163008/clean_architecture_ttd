@@ -16,10 +16,10 @@ abstract class NumberTriviaRemoteDataSource {
   Future<NumberTriviaModel> getRandomNumberTrivia();
 }
 
-class NumberTriviaRemoteDataSourceImp implements NumberTriviaRemoteDataSource {
+class NumberTriviaRemoteDataSourceImpl implements NumberTriviaRemoteDataSource {
   final http.Client httpclient;
 
-  NumberTriviaRemoteDataSourceImp({required this.httpclient});
+  NumberTriviaRemoteDataSourceImpl({required this.httpclient});
 
   @override
   Future<NumberTriviaModel> getConcreteNumberTrivia(int number) =>

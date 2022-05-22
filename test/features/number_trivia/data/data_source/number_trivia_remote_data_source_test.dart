@@ -14,10 +14,10 @@ import 'number_trivia_remote_data_source_test.mocks.dart';
 @GenerateMocks([http.Client])
 void main() {
   late final MockClient mockClient;
-  late final NumberTriviaRemoteDataSourceImp sut;
+  late final NumberTriviaRemoteDataSourceImpl sut;
   setUpAll(() {
     mockClient = MockClient();
-    sut = NumberTriviaRemoteDataSourceImp(httpclient: mockClient);
+    sut = NumberTriviaRemoteDataSourceImpl(httpclient: mockClient);
   });
   void callMockClientWhenWant200StatusCode() {
     when(mockClient.get(any, headers: anyNamed('headers')))

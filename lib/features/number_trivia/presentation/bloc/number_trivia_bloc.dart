@@ -6,6 +6,7 @@ import 'package:dartz/dartz.dart';
 import 'package:equatable/equatable.dart';
 
 import '../../../../core/errors/failure.dart';
+import '../../../../core/usecases/usecase.dart';
 import '../../domain/entities/number_trivia.dart';
 
 part 'number_trivia_event.dart';
@@ -23,14 +24,14 @@ class NumberTriviaBloc extends Bloc<NumberTriviaEvent, NumberTriviaState> {
   late final InputConverter inputConverter;
 
   NumberTriviaBloc(
-      {required concrete, required random, required this.inputConverter})
-      : assert(concrete != null),
-        assert(random != null),
-        getRandomNumberTrivia = random,
-        getConcreteNumberTrivia = concrete,
-        super(Empty()) {
-    on<NumberTriviaEvent>((event, emit) {
+      {required this.getConcreteNumberTrivia,
+      required this.getRandomNumberTrivia,
+      required this.inputConverter})
+      : super(Empty()) {
+    on<NumberTriviaEvent>((event, emit) async {
       if (event is GetTriviaForConcreteNumber) {
+        emit(Loading());
+
         ///Format string from presentation layer from event
         final Either<Failure, int> formatStringEither =
             inputConverter.stringToUnsignedInteger(event.numberString);
@@ -39,37 +40,38 @@ class NumberTriviaBloc extends Bloc<NumberTriviaEvent, NumberTriviaState> {
 
         /// after getting numberTriviaStateFromFormatStringEither then emit it
 
-        formatStringEither.fold(
+        await formatStringEither.fold(
           (failure) {
             emit(const Error(errorMessage: invalidInput));
           },
           (integer) async {
-            emit(Loading());
             final Either<Failure, NumberTrivia> numberTrivia =
                 await getConcreteNumberTrivia.call(
                     params: Params(number: integer));
             final result = numberTrivia.fold(
-                (failure) => const Error(errorMessage: serverFailure),
-                (numberTrivia) => Loaded(trivia: numberTrivia));
+              (failure) => Error(errorMessage: mapErrorToString(failure)),
+              (numberTrivia) => Loaded(trivia: numberTrivia),
+            );
             emit(result);
           },
         );
-        // final FutureOr<NumberTriviaState> result = either.fold(
-        //   (failure) => const Error(errorMessage: invalidInput),
-        //   (integer) async {
-        //     final Either<Failure, NumberTrivia> getConcreteResult =
-        //         await getConcreteNumberTrivia.call(
-        //             params: Params(number: integer));
-        //     final NumberTriviaState resultEvent = getConcreteResult.fold(
-        //       (failure) => const Error(errorMessage: serverFailure),
-        //       (numberTrivia) => Loaded(
-        //         trivia: numberTrivia,
-        //       ),
-        //     );
-        //   },
-        // );
-        // emit(await result);
+      } else if (event is GetTriviaForRandomNumber) {
+        final Either<Failure, NumberTrivia> numberTrivia =
+            await getRandomNumberTrivia.call(params: NoParams());
+        final result = numberTrivia.fold(
+            (failure) => Error(errorMessage: mapErrorToString(failure)),
+            (numberTrivia) => Loaded(trivia: numberTrivia));
+        emit(result);
       }
     });
+  }
+
+  String mapErrorToString(Failure failure) {
+    if (failure is LocalFailure) {
+      return serverFailure;
+    } else if (failure is ServerFailure) {
+      return cacheFailure;
+    }
+    return 'Unexpected Error';
   }
 }

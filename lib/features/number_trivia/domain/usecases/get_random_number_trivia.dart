@@ -4,7 +4,7 @@ import 'package:clean_architecture_ttd/features/number_trivia/domain/entities/nu
 import 'package:clean_architecture_ttd/features/number_trivia/domain/repositories/number_trivia_repository.dart';
 import 'package:dartz/dartz.dart';
 
-class GetRandomNumberTrivia extends Usecase<NumberTrivia, NoParams> {
+class GetRandomNumberTrivia implements Usecase<NumberTrivia, NoParams> {
   NumberTriviaRepository repository;
 
   GetRandomNumberTrivia(this.repository);

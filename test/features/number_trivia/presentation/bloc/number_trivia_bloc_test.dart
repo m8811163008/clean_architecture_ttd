@@ -28,8 +28,8 @@ void main() {
     mockGetRandomNumberTrivia = MockGetRandomNumberTrivia();
     mockInputConverter = MockInputConverter();
     sut = NumberTriviaBloc(
-        concrete: mockGetConcreteNumberTrivia,
-        random: mockGetRandomNumberTrivia,
+        getConcreteNumberTrivia: mockGetConcreteNumberTrivia,
+        getRandomNumberTrivia: mockGetRandomNumberTrivia,
         inputConverter: mockInputConverter);
 
     //bloc emit state , one of state[Empty, Loaded, Loading, Error] which is Loaded emits NumberTrivia

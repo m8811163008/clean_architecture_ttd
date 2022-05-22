@@ -1,4 +1,4 @@
-import 'package:clean_architecture_ttd/core/network/data_connection.dart';
+
 import 'package:clean_architecture_ttd/core/network/network_info.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:mockito/annotations.dart';
